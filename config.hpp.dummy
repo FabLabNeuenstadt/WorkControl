@@ -1,0 +1,10 @@
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
+
+const char* ssid;
+const char* password;
+
+long interval = 60*60*1000;
+
+#endif
+
