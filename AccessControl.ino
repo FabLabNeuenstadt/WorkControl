@@ -9,10 +9,21 @@
 #define GREEN_PIN D2
 #define RST_PIN D3
 #define SS_PIN D8
+#define WORK_PIN D0
+#define FREE_PIN D3
+
+#define ARRAY_OFFSET 1
 
 WiFiUDP udp;
 NTPClient ntp(udp, "europe.pool.ntp.org", 0,  interval);
 MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+enum {
+  UNSET = 0,
+  WORK_MODE = 1,
+  FREE_MODE = 2,
+  SHOW_MODE = 3
+};
 
 void setup() {
   Serial.begin(9600);
@@ -77,7 +88,7 @@ void loop() {
   }
 
   byte mode = buffer[0];
-  unsigned long timestamp = bufferToLong(buffer);
+  unsigned long timestamp = bufferToLong(buffer, ARRAY_OFFSET);
 
   
 }
@@ -89,6 +100,19 @@ void connect() {
     Serial.print(".");
   }
   Serial.println();
+}
+
+byte getCurrentMode() {
+  bool workState = digitalRead(WORK_PIN);
+  bool freeState = digitalRead(FREE_PIN);
+
+  if (workState) {
+    return WORK_MODE;
+  } else if (freeState) {
+    return FREE_MODE;
+  } else {
+    return SHOW_MODE;
+  }
 }
 
 //Both conversion methods are for low-endianess
