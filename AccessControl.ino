@@ -4,15 +4,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include "config.hpp"
-
-#define RED_PIN D1
-#define GREEN_PIN D2
-#define RST_PIN D3
-#define SS_PIN D8
-#define WORK_PIN D0
-#define FREE_PIN D3
-
-#define ARRAY_OFFSET 1
+#include "const.hpp"
+#include "conversion.hpp"
 
 WiFiUDP udp;
 NTPClient ntp(udp, "europe.pool.ntp.org", 0,  interval);
@@ -61,6 +54,14 @@ void loop() {
         Serial.println(F("This sample only works with MIFARE Classic cards."));
         return;
   }
+#define RED_PIN D1
+#define GREEN_PIN D2
+#define RST_PIN D3
+#define SS_PIN D8
+#define WORK_PIN D0
+#define FREE_PIN D3
+
+#define ARRAY_OFFSET 1
 
   MFRC522::MIFARE_Key key;
   for (int i = 0; i < 6; i++) {
