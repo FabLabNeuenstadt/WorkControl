@@ -87,10 +87,23 @@ void loop() {
         Serial.println(mfrc522.GetStatusCodeName(status));
   }
 
-  byte mode = buffer[0];
-  unsigned long timestamp = bufferToLong(buffer, ARRAY_OFFSET);
-
+  byte cardMode = buffer[0];
+  byte switchMode = getCurrentMode();
   
+  switch (cardMode) {
+    case UNSET: {
+      unset(switchMode);
+    }break;
+    case WORK_MODE: {
+      work_mode(switchMode);
+    }break;
+    case FREE_MODE: {
+      free_mode(switchMode);
+    }break;
+    default: {
+      Serial.println(F("Invalid Card! Unknown mode"));
+    }
+  }  
 }
 
 void connect() {
