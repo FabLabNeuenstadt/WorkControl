@@ -14,3 +14,13 @@ void longToBuffer(byte* buffer, unsigned long value, int start) {
   buffer[start + 2] = value >> 16;
   buffer[start + 3] = value >> 24; 
 }
+
+String longToTime(unsigned long convertTime) {
+  convertTime = convertTime / 1000;
+  unsigned long hours     = convertTime / (60 * 60);
+  unsigned long minutes = (convertTime % (60 * 60)) / 60;
+  String result = String(hours) + ":" + String(minutes);
+
+  return result;
+}
+
