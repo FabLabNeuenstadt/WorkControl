@@ -4,7 +4,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Wire.h>
-#include <Adafruit_LiquidCrystal.h>
+#include <LiquidCrystal_PCF8574.h>
 #include "config.hpp"
 #include "const.hpp"
 #include "conversion.hpp"
@@ -13,13 +13,14 @@
 WiFiUDP udp;
 NTPClient ntp(udp, "europe.pool.ntp.org", 0,  interval);
 MFRC522 mfrc522(SS_PIN, MFRC522::UNUSED_PIN);
-Adafruit_LiquidCrystal lcd(DATA_PIN, CLOCK_PIN, LATCH_PIN);
+LiquidCrystal_PCF8574 lcd(0x27);
 
 void setup() {
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
   lcd.begin(16, 2);
+  lcd.setBacklight(128);
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);

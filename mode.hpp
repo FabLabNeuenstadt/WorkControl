@@ -1,7 +1,7 @@
 #ifndef MODE_HPP
 #define MODE_HPP
 #include <MFRC522.h>
-#include <Adafruit_LiquidCrystal.h>
+#include <LiquidCrystal_PCF8574.h>
 
 enum {
   UNSET = 0,
@@ -12,11 +12,11 @@ enum {
 
 byte getCurrentMode();
 
-bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd);
-void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd);
+bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);
+void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);
 
-void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd);
-void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd);
-void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd);
+void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);
+void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);
+void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);
 
 #endif

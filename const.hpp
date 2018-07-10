@@ -3,9 +3,6 @@
 
 #define WORK_PIN D0
 #define FREE_PIN D1
-#define DATA_PIN D2
-#define CLOCK_PIN D3
-#define LATCH_PIN D4
 #define SS_PIN D8
 
 #define TIME_OFFSET 1

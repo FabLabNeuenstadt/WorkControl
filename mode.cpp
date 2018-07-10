@@ -19,7 +19,7 @@ byte getCurrentMode() {
   }
 }
 
-bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd) {
+bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   unsigned long cardTime = bufferToLong(buffer, TIME_OFFSET);
   if (day(cardTime) != day(currTime)) {
     longToBuffer(buffer, currTime, TIME_OFFSET);
@@ -34,7 +34,7 @@ bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_Li
   return false;
 }
 
-void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd) {
+void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   byte switchMode = getCurrentMode();
   longToBuffer(buffer, currTime, TIME_OFFSET);
   longToBuffer(buffer, 0, WORK_OFFSET);
@@ -60,7 +60,7 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_Liqu
   writeBlock(buffer, mfrc522);
 }
 
-void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd) {
+void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   nextDay(currTime, buffer, mfrc522, lcd);
 
   byte cardMode = buffer[0];
@@ -88,7 +88,7 @@ void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_
   }
 }
 
-void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd) {
+void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   nextDay(currTime, buffer, mfrc522, lcd);
 
   byte cardMode = buffer[0];
@@ -116,7 +116,7 @@ void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_
   }
 }
 
-void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, Adafruit_LiquidCrystal* lcd)  {
+void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd)  {
   nextDay(currTime, buffer, mfrc522, lcd);
   
   unsigned long cardTime = bufferToLong(buffer, TIME_OFFSET);
