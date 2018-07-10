@@ -20,6 +20,7 @@ void setup() {
   SPI.begin();
   mfrc522.PCD_Init();
   lcd.begin(16, 2);
+  Wire.begin(D3, D4);
   lcd.setBacklight(128);
   
   WiFi.mode(WIFI_STA);
