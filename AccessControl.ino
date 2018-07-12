@@ -82,10 +82,10 @@ void loop() {
       work_mode(currTime, buffer, &mfrc522, &lcd);
     }break;
     case FREE_MODE: {
-      work_mode(currTime, buffer, &mfrc522, &lcd);
+      free_mode(currTime, buffer, &mfrc522, &lcd);
     }break;
     case SHOW_MODE: {
-      work_mode(currTime, buffer, &mfrc522, &lcd);
+      show_mode(currTime, buffer, &mfrc522, &lcd);
     }
   }
 
