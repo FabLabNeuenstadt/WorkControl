@@ -38,7 +38,7 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
   byte switchMode = getCurrentMode();
   longToBuffer(buffer, currTime, TIME_OFFSET);
   longToBuffer(buffer, 0, WORK_OFFSET);
-  longToBuffer(buffer, 0, TIME_OFFSET);
+  longToBuffer(buffer, 0, FREE_OFFSET);
   
   lcd->clear();
   if (switchMode == WORK_MODE || switchMode == SHOW_MODE) {
