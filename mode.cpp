@@ -42,17 +42,17 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
   
   lcd->clear();
   if (switchMode == WORK_MODE || switchMode == SHOW_MODE) {
-    Serial.println(F("New card. Set to: WORK_MODE"));
+    Serial.println(F("New card. Set to:WORK_MODE"));
     lcd->print(F("New card"));
     lcd->setCursor(0, 1);
-    lcd->print(F("Set to: WORK_MODE"));
+    lcd->print(F("Set to:WORK_MODE"));
 
     buffer[0] = WORK_MODE;
   } else {
-    Serial.println(F("New card. Set to: FREE_MODE"));
+    Serial.println(F("New card. Set to:FREE_MODE"));
     lcd->print(F("New card")); 
     lcd->setCursor(0, 1);
-    lcd->print(F("Set to: FREE_MODE"));
+    lcd->print(F("Set to:FREE_MODE"));
 
     buffer[0] = FREE_MODE;
   }
@@ -63,27 +63,30 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
 void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   nextDay(currTime, buffer, mfrc522, lcd);
 
-  byte cardMode = buffer[0];
   unsigned long cardTime = bufferToLong(buffer, TIME_OFFSET);
   unsigned long workTime = bufferToLong(buffer, WORK_OFFSET);
   unsigned long freeTime = bufferToLong(buffer, FREE_OFFSET);
-  unsigned long worked = (currTime - cardTime) + workTime;
-  unsigned long freed = (currTime - cardTime) + freeTime;
+
+  if (buffer[0] == WORK_MODE) {
+    workTime += (currTime - cardTime);
+  } else if (buffer[0] == FREE_MODE) {
+    freeTime += (currTime - cardTime);
+  }
   
   lcd->clear();
-  Serial.print(F("Worked time: "));
-  Serial.println(longToTime(worked));
+  Serial.print(F("Worked time:"));
+  Serial.println(longToTime(workTime));
 
-  lcd->print(F("Worked: "));
-  lcd->print(longToTime(worked));
+  lcd->print(F("Worked:"));
+  lcd->print(longToTime(workTime));
 
-  if (cardMode == FREE_MODE) {
+  if (buffer[0] == FREE_MODE) {
     lcd->setCursor(0, 1);
-    lcd->print(F("Set to: WORK_MODE"));
+    lcd->print(F("Set to:WORK_MODE"));
 
     buffer[0] = WORK_MODE;
     longToBuffer(buffer, currTime, TIME_OFFSET);
-    longToBuffer(buffer, freed, FREE_OFFSET);
+    longToBuffer(buffer, freeTime, FREE_OFFSET);
     writeBlock(buffer, mfrc522);  
   }
 }
@@ -91,27 +94,30 @@ void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
 void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
   nextDay(currTime, buffer, mfrc522, lcd);
 
-  byte cardMode = buffer[0];
   unsigned long cardTime = bufferToLong(buffer, TIME_OFFSET);
   unsigned long workTime = bufferToLong(buffer, WORK_OFFSET);
   unsigned long freeTime = bufferToLong(buffer, FREE_OFFSET);
-  unsigned long worked = (currTime - cardTime) + workTime;
-  unsigned long freed = (currTime - cardTime) + freeTime;
+  
+  if (buffer[0] == WORK_MODE) {
+    workTime += (currTime - cardTime);
+  } else if (buffer[0] == FREE_MODE) {
+    freeTime += (currTime - cardTime);
+  }
   
   lcd->clear();
-  Serial.print(F("Free time: "));
-  Serial.println(longToTime(freed));
+  Serial.print(F("Free time:"));
+  Serial.println(longToTime(freeTime));
 
-  lcd->print(F("Free: "));
-  lcd->print(longToTime(freed));
+  lcd->print(F("Free:"));
+  lcd->print(longToTime(freeTime));
 
-  if (cardMode == WORK_MODE) {
+  if (buffer[0] == WORK_MODE) {
     lcd->setCursor(0, 1);
-    lcd->print(F("Set to: FREE_MODE"));
+    lcd->print(F("Set to:FREE_MODE"));
 
     buffer[0] = FREE_MODE;
     longToBuffer(buffer, currTime, TIME_OFFSET);
-    longToBuffer(buffer, worked, WORK_OFFSET);
+    longToBuffer(buffer, workTime, WORK_OFFSET);
     writeBlock(buffer, mfrc522);  
   }
 }
@@ -122,19 +128,23 @@ void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
   unsigned long cardTime = bufferToLong(buffer, TIME_OFFSET);
   unsigned long workTime = bufferToLong(buffer, WORK_OFFSET);
   unsigned long freeTime = bufferToLong(buffer, FREE_OFFSET);
-  unsigned long worked = (currTime - cardTime) + workTime;
-  unsigned long freed = (currTime - cardTime) + freeTime;
+  
+  if (buffer[0] == WORK_MODE) {
+    workTime += (currTime - cardTime);
+  } else if (buffer[0] == FREE_MODE) {
+    freeTime += (currTime - cardTime);
+  }
   
   lcd->clear();
-  Serial.print(F("Worked time: "));
-  Serial.println(longToTime(worked));
-  Serial.print(F("Free time: "));
-  Serial.println(longToTime(freed));
+  Serial.print(F("Worked time:"));
+  Serial.println(longToTime(workTime));
+  Serial.print(F("Free time:"));
+  Serial.println(longToTime(freeTime));
 
-  lcd->print(F("Worked: "));
-  lcd->print(longToTime(worked));
+  lcd->print(F("Worked:"));
+  lcd->print(longToTime(workTime));
   lcd->setCursor(0, 1);
-  lcd->print(F("Free: "));
-  lcd->print(longToTime(freed));
+  lcd->print(F("Free:"));
+  lcd->print(longToTime(freeTime));
 }
 
