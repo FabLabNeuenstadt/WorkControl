@@ -16,9 +16,9 @@ void longToBuffer(byte* buffer, unsigned long value, int start) {
 }
 
 String longToTime(unsigned long convertTime) {
-  convertTime = convertTime / 1000;
-  unsigned long hours     = convertTime / (60 * 60);
-  unsigned long minutes = (convertTime % (60 * 60)) / 60;
+  convertTime /= 60;
+  unsigned long hours = convertTime / 60;
+  unsigned long minutes = convertTime % 60;
   String result = String(hours) + ":" + String(minutes);
 
   return result;
