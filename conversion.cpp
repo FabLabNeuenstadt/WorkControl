@@ -19,7 +19,15 @@ String longToTime(unsigned long convertTime) {
   convertTime /= 60;
   unsigned long hours = convertTime / 60;
   unsigned long minutes = convertTime % 60;
-  String result = String(hours) + ":" + String(minutes);
+  String hoursS = String(hours);
+  String minutesS = String(minutes);
+  if (hoursS.length() == 1)
+    hoursS = "0" + hoursS;
+
+  if (minutesS.length() == 1) 
+    minutesS = "0" + minutesS;
+    
+  String result =  hoursS + ":" + minutesS;
 
   return result;
 }
