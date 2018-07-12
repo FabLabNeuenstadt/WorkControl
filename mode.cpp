@@ -24,7 +24,7 @@ bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCryst
   if (day(cardTime) != day(currTime)) {
     longToBuffer(buffer, currTime, TIME_OFFSET);
     longToBuffer(buffer, 0, WORK_OFFSET);
-    longToBuffer(buffer, 0, TIME_OFFSET);
+    longToBuffer(buffer, 0, FREE_OFFSET);
 
     writeBlock(buffer, mfrc522);
     Serial.println(F("Next day. Resetted times"));
@@ -39,7 +39,7 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
   longToBuffer(buffer, currTime, TIME_OFFSET);
   longToBuffer(buffer, 0, WORK_OFFSET);
   longToBuffer(buffer, 0, TIME_OFFSET);
-
+  
   lcd->clear();
   if (switchMode == WORK_MODE || switchMode == SHOW_MODE) {
     Serial.println(F("New card. Set to: WORK_MODE"));
