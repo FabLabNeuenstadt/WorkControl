@@ -13,14 +13,15 @@
 WiFiUDP udp;
 NTPClient ntp(udp, "europe.pool.ntp.org", 0,  interval);
 MFRC522 mfrc522(SS_PIN, MFRC522::UNUSED_PIN);
-LiquidCrystal_PCF8574 lcd(0x27);
+LiquidCrystal_PCF8574 lcd(0x3f);
 
 void setup() {
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
+  
+  Wire.pins(SDA_PIN, SCL_PIN);
   lcd.begin(16, 2);
-  Wire.begin(D3, D4);
   lcd.setBacklight(128);
   
   WiFi.mode(WIFI_STA);
