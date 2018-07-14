@@ -73,7 +73,7 @@ void loop() {
   }
 
   byte cardMode = buffer[0];  
-  if (cardMode == UNSET) {
+  if (cardMode != WORK_MODE && cardMode != FREE_MODE) {
     unset(currTime, buffer, &mfrc522, &lcd);  
   }
 
