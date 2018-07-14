@@ -80,7 +80,7 @@ void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
   lcd->print(F("Worked:"));
   lcd->print(longToTime(workTime));
 
-  if (buffer[0] == FREE_MODE) {
+  if (buffer[0] != WORK_MODE) {
     lcd->setCursor(0, 1);
     lcd->print(F("Set to:WORK_MODE"));
 
@@ -111,7 +111,7 @@ void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
   lcd->print(F("Free:"));
   lcd->print(longToTime(freeTime));
 
-  if (buffer[0] == WORK_MODE) {
+  if (buffer[0] != FREE_MODE) {
     lcd->setCursor(0, 1);
     lcd->print(F("Set to:FREE_MODE"));
 
