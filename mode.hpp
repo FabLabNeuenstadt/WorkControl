@@ -10,6 +10,8 @@ enum {
   SHOW_MODE = 3
 };
 
+extern unsigned long lcdStarted;
+
 byte getCurrentMode();
 
 bool nextDay(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd);

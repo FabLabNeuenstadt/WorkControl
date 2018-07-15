@@ -6,6 +6,8 @@
 #include "rfid_helper.hpp"
 #include <TimeLib.h>
 
+unsigned long lcdStarted = 0;
+
 byte getCurrentMode() {
   bool workState = digitalRead(WORK_PIN);
   bool freeState = digitalRead(FREE_PIN);
@@ -46,6 +48,7 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
     lcd->print(F("New card"));
     lcd->setCursor(0, 1);
     lcd->print(F("Set to:WORK_MODE"));
+    lcdStarted = millis();
 
     buffer[0] = WORK_MODE;
   } else {
@@ -53,6 +56,7 @@ void unset(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal
     lcd->print(F("New card")); 
     lcd->setCursor(0, 1);
     lcd->print(F("Set to:FREE_MODE"));
+    lcdStarted = millis();
 
     buffer[0] = FREE_MODE;
   }
@@ -89,6 +93,8 @@ void work_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
     longToBuffer(buffer, freeTime, FREE_OFFSET);
     writeBlock(buffer, mfrc522);  
   }
+
+  lcdStarted = millis();
 }
 
 void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd) {
@@ -120,6 +126,8 @@ void free_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
     longToBuffer(buffer, workTime, WORK_OFFSET);
     writeBlock(buffer, mfrc522);  
   }
+
+  lcdStarted = millis();
 }
 
 void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCrystal_PCF8574* lcd)  {
@@ -146,5 +154,7 @@ void show_mode(unsigned long currTime, byte* buffer, MFRC522* mfrc522, LiquidCry
   lcd->setCursor(0, 1);
   lcd->print(F("Free:"));
   lcd->print(longToTime(freeTime));
+
+  lcdStarted = millis();
 }
 

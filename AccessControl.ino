@@ -19,11 +19,11 @@ void setup() {
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
-  
+
   Wire.pins(SDA_PIN, SCL_PIN);
   lcd.begin(16, 2);
   lcd.setBacklight(128);
-  
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   connect();
@@ -32,11 +32,17 @@ void setup() {
 }
 
 void loop() {
+
+  if ((millis() - lcdStarted) >= 2 * 60 * 1000) {
+    lcd.clear();
+    lcdStarted = 0;
+  }
+
   connect();
   ntp.update();
   unsigned long currTime = ntp.getEpochTime();
 
-  if (!mfrc522.PICC_IsNewCardPresent()) 
+  if (!mfrc522.PICC_IsNewCardPresent())
     return;
 
   if (!mfrc522.PICC_ReadCardSerial())
@@ -44,50 +50,50 @@ void loop() {
 
   MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
   if (         piccType != MFRC522::PICC_TYPE_MIFARE_MINI
-        &&  piccType != MFRC522::PICC_TYPE_MIFARE_1K
-        &&  piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
-        Serial.println(F("This sample only works with MIFARE Classic cards."));
-        return;
+               &&  piccType != MFRC522::PICC_TYPE_MIFARE_1K
+               &&  piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
+    Serial.println(F("This sample only works with MIFARE Classic cards."));
+    return;
   }
 
   MFRC522::MIFARE_Key key;
   for (int i = 0; i < 6; i++) {
     key.keyByte[i] = 0xFF;
   }
-  
+
   const byte bufferSize = 18;
 
   MFRC522::StatusCode status = (MFRC522::StatusCode) mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, TRAILOR,  &key, &(mfrc522.uid));
   if (status != MFRC522::STATUS_OK) {
     Serial.print(F("PCD_Authenticate() failed: "));
     Serial.println(mfrc522.GetStatusCodeName(status));
-    return; 
+    return;
   }
 
   byte buffer[bufferSize];
   byte bufferSizeCopy = bufferSize;
   status = (MFRC522::StatusCode) mfrc522.MIFARE_Read(BLOCK, buffer, &bufferSizeCopy);
   if (status != MFRC522::STATUS_OK) {
-        Serial.print(F("MIFARE_Read() failed: "));
-        Serial.println(mfrc522.GetStatusCodeName(status));
+    Serial.print(F("MIFARE_Read() failed: "));
+    Serial.println(mfrc522.GetStatusCodeName(status));
   }
 
-  byte cardMode = buffer[0];  
+  byte cardMode = buffer[0];
   if (cardMode != WORK_MODE && cardMode != FREE_MODE) {
-    unset(currTime, buffer, &mfrc522, &lcd);  
+    unset(currTime, buffer, &mfrc522, &lcd);
   }
 
   byte switchMode = getCurrentMode();
   switch (switchMode) {
     case WORK_MODE: {
-      work_mode(currTime, buffer, &mfrc522, &lcd);
-    }break;
+        work_mode(currTime, buffer, &mfrc522, &lcd);
+      } break;
     case FREE_MODE: {
-      free_mode(currTime, buffer, &mfrc522, &lcd);
-    }break;
+        free_mode(currTime, buffer, &mfrc522, &lcd);
+      } break;
     case SHOW_MODE: {
-      show_mode(currTime, buffer, &mfrc522, &lcd);
-    }
+        show_mode(currTime, buffer, &mfrc522, &lcd);
+      }
   }
 
   mfrc522.PICC_HaltA();
